@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPA Users</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>{{ title }}</h1>
+          <button class="btn btn-primary my-2" @click="showModal">ユーザ登録</button>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <th>更新</th>
+                <th>削除</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in users">
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td><button class="btn btn-primary">更新</button></td>
+                <td><button class="btn btn-danger">削除</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <modal name="user-modal">
+      <h2>ユーザ登録</h2>
+    </modal>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-js-modal@1.3.31/dist/index.min.js"></script>
+  <script>
+    Vue.use(window["vue-js-modal"].default);
+
+    const vue = new Vue({
+      el: "#app",
+      data: {
+        title: 'ユーザ一覧',
+        users: [],
+      },
+      methods: {
+        showModal(){
+          this.$modal.show('user-modal');
+        }
+      },
+      created(){
+        this.users = [
+          {
+            id: 1,
+            name: 'Leanne Graham',
+            email: 'sincere@april.biz'
+          },{
+            id: 2,
+            name: 'Ervin Howell',
+            email: 'shanna@mellissa.tv'
+          },{
+            id: 3,
+            name: 'Clementine Bauch',
+            email: 'nathan@yesenia.net'
+          }
+        ]
+      }
+    });
+  </script>
+</body>
+
+</html>
