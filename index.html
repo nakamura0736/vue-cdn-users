@@ -30,16 +30,41 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
-                <td><button class="btn btn-primary">更新</button></td>
-                <td><button class="btn btn-danger">削除</button></td>
+                <td><button class="btn btn-primary" @click="editUser(user)">更新</button></td>
+                <td><button class="btn btn-danger" @click="deleteUser(user)">削除</button></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <modal name="user-modal">
-      <h2>ユーザ登録</h2>
+    <!-- モーダルウィンドウ用 -->
+    <modal name="user-modal" :height="400">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            <h2 v-if="createFlag">ユーザ登録</h2>
+            <h2 v-else>ユーザ更新</h2>
+          </div>
+          <div class="card-text">
+            <div class="form-group">
+              <label for="id">ID</label>
+              <input type="text" class="form-control" id="id" placeholder="IDを入力してください" v-model="form.id">
+            </div>
+            <div class="form-group">
+              <label for="name">NAME</label>
+              <input type="text" class="form-control" id="name" placeholder="NAMEを入力してください" v-model="form.name">
+            </div>
+            <div class="form-group">
+              <label for="email">EMAIL</label>
+              <input type="text" class="form-control" id="email" placeholder="EMAILを入力してください" v-model="form.email">
+            </div>
+            <button class="btn btn-primary" @click="registerUser" v-if="createFlag">登録</button>
+            <button class="btn btn-primary" @click="updateUser" v-else>更新</button>
+            <button class="btn btn-primary" @click="cancel">キャンセル</button>
+          </div>
+        </div>
+      </div>
     </modal>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -51,11 +76,48 @@
       el: "#app",
       data: {
         title: 'ユーザ一覧',
+        form: {
+          id:'',
+          name:'',
+          email:''
+        },
         users: [],
+        editIndex: -1,
+        createFlag: true,
       },
       methods: {
         showModal(){
+          this.createFlag = true;
+          this.resetForm();
           this.$modal.show('user-modal');
+        },
+        registerUser(){
+          const user = Object.assign({},this.form);
+          this.users.push(user);
+          this.$modal.hide('user-modal');
+          this.resetForm();
+        },
+        resetForm(){
+          this.form.id ='';
+          this.form.name ='';
+          this.form.email ='';
+        },
+        deleteUser(user){
+          const index = this.users.indexOf(user);
+          this.users.splice(index, 1);
+        },
+        editUser(user){
+          this.createFlag = false,
+          this.editIndex = this.users.indexOf(user);
+          this.form = Object.assign({}, user);
+          this.$modal.show('user-modal');
+        },
+        updateUser(){
+          Object.assign(this.users[this.editIndex], this.form);
+          this.$modal.hide('user-modal');
+        },
+        cancel(){
+          this.$modal.hide('user-modal');
         }
       },
       created(){
